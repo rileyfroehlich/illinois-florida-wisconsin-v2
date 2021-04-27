@@ -118,7 +118,6 @@ def get_last_nums(month, day, year, whichState, sex, sdx):
 		if isFemale == True:
 			isFemaleTrue = 5
 	
-	max_num_illinois = eachMonth * 12
 	isFemale = True
 
 	dictMonths = {"JANUARY" : 1, "FEBRUARY" : 2, "MARCH" : 3,
@@ -129,8 +128,8 @@ def get_last_nums(month, day, year, whichState, sex, sdx):
 	year_sep = "-"
 
 	year = year[-2:]
-	if whichState.lower() == 'illinois':
-		year = year[0] + year_sep + year[-1]
+#	if whichState.lower() == 'illinois':
+#		year = year[0] + year_sep + year[-1]
 
 	monthEncoding = (dictMonths[month.upper()] - 1) * eachMonth + day
 
@@ -148,5 +147,22 @@ def get_last_nums(month, day, year, whichState, sex, sdx):
 	sdx += str(year) + str(monthEncoding)
 	return sdx
 
-MyLicenseNumber = get_last_nums("March", 1, 2049, 'florida', 'f', name_middle_initial('Opius','Henry', 'B',))
-print(MyLicenseNumber)
+
+# One function to generate and format a driver's license number for 
+# illinois, wisconsin, and florida
+def generateDLN( state, month, day, year, sex, first, last, middle=None):
+	MyLicenseNumber = get_last_nums(month, day, year, state, sex, name_middle_initial(first,last, middle))
+	state = state.lower()
+
+	#formatting for individual states
+	#overflow numbers are added at the end and represented as '0' or '00'
+	if state == 'florida':
+		MyLicenseNumber = MyLicenseNumber[0:4] + '-' + MyLicenseNumber[4:7] + '-' + MyLicenseNumber[7:9] + '-' + MyLicenseNumber[9:] + '-0'
+
+	elif state == 'wisconsin' or state == 'illinois':
+		MyLicenseNumber = MyLicenseNumber[0:4] + '-' + MyLicenseNumber[4:8] + '-' + MyLicenseNumber[8:]
+		if state == 'wisconsin':
+			MyLicenseNumber = MyLicenseNumber + '-00'
+	return MyLicenseNumber
+
+print(generateDLN('illinois', "January", 1, 2049, 'm','Opius','Henry', 'B'))
