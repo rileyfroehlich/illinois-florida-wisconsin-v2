@@ -24,17 +24,44 @@ def get_soundex(name):
 
 	return str(soundex)
 
-def name_middle_initial(name, middle_initial=None):
+def name_middle_initial(name, last_name, middle_initial=None):
 	#get soundex of given name
-	sdx = get_soundex(name)
+	sdx = get_soundex(last_name)
 
+	name_dictionary = {'Albert':20, 'Frank':260,'Marvin':580,
+						'Alice':20, 'George':300,'Mary':580,
+						'Ann':40,'Grace':300, 'Melvin':600,
+						'Anna':40,'Harold':340,'Mildred':600,
+						'Anne':40,'Harriet':340, 'Patricia':680,
+						'Annie':40, 'Harry':360, 'Paul':680,
+						'Arthur':40, 'Hazel':360, 'Richard':740,
+						'Bernard':80, 'Helen':380, 'Robert':760,
+						'Bette':80, 'Henry':380, 'Ruby':740,
+						'Bettie':80, 'James':440, 'Ruth':760,
+						'Betty':80, 'Jane':440, 'Thelma':820,
+						'Carl':120, 'Jayne':440, 'Thomas':820,
+						'Catherine':120, 'Jean':460, 'Walter':900, 
+						'Charles':140,'Joan':480, 'Wanda':900,
+						'Dorthy':180, 'John':460, 'William':920,
+						'Edward':220, 'Joseph':480, 'Wilma':920,
+						'Elizabeth':220, 'Margaret':560,
+						'Florence':260, 'Martin':560,
+						'Donald':180,
+						'Clara':140
+						}
 
-	dictionary = {"A" : "000", "B" : "060", "C" : "100"}
+	dictionary = {"A" : 0, "B" : 60, "C" : 100, "D" : 160, "E" : 240, 
+				  "G" : 280, "H" : 320, "I" : 400, "J" : 420, "K" : 500,
+				  "L" : 520, "M" : 540, "N" : 620, "O" : 640, "P" : 660,
+				  "Q" : 700, "R" : 720, "S" : 780, "T" : 800, "U" : 840,
+				  "V" : 860, "W" : 880, "X" : 940, "Y" : 960, "Z" : 980
+				  }
+
 	#just used a to c so that the math works
 	#so in the below line we only need D-Z
-	alphabet = 'DEFGHIJKLMNOPQRSTUVWXYZ'
-	for i in range(1, len(alphabet)):
-		dictionary[alphabet[i]] = str(100 + (i * 40))
+#	alphabet = 'DEFGHIJKLMNOPQRSTUVWXYZ'
+#	for i in range(1, len(alphabet)):
+#		dictionary[alphabet[i]] = str(100 + (i * 40))
 
 	#middle initial codes
 	dict2 = {"NO" : 14, "PQ" : 15, "R" : 16, "S" : 17, "TUV" : 18, "WXYZ" : 19}
@@ -48,12 +75,17 @@ def name_middle_initial(name, middle_initial=None):
 		if middle_initial in key:
 			middle_initial_encoding = dict2[key]
 			break
-	
-	if name[0].upper() in 'AB':
-		if name[0].upper() == 'A':
-			name0 = 0
-		elif name[0].upper() == 'B':
-			name0 = 60
+	name = name.capitalize()
+	if name in name_dictionary:
+		name0 = name_dictionary[name]
+	else:
+		name0 = dictionary[name[0]]
+
+#	if name[0].upper() in 'AB':
+#		if name[0].upper() == 'A':
+#			name0 = 0
+#		elif name[0].upper() == 'B':
+#			name0 = 60
 		name0 += middle_initial_encoding
 		name0 = str(name0)
 		if len(name0) < 3:
@@ -61,9 +93,9 @@ def name_middle_initial(name, middle_initial=None):
 				name0 = "0" + name0
 		sdx += str(name0)
 
-	else:
-		next_3_nums = dictionary[name[0]] + str(middle_initial_encoding)
-		sdx += str(next_3_nums)
+#	else:
+#		next_3_nums = dictionary[name[0]] + str(middle_initial_encoding)
+#		sdx += str(next_3_nums)
 
 	return sdx
 
@@ -81,7 +113,7 @@ def get_last_nums(month, day, year, whichState, sex, sdx):
 		eachMonth = 31
 		if isFemale == True:
 			isFemaleTrue = 6
-	elif whichState.lower() == 'florida' or whichState.lower() == 'wisconsin'
+	elif whichState.lower() == 'florida' or whichState.lower() == 'wisconsin':
 		eachMonth = 40
 		if isFemale == True:
 			isFemaleTrue = 5
@@ -116,5 +148,5 @@ def get_last_nums(month, day, year, whichState, sex, sdx):
 	sdx += str(year) + str(monthEncoding)
 	return sdx
 
-MyLicenseNumber = get_last_nums("March", 1, 2049, 'florida', 'f', name_middle_initial('Aaron', 'B'))
+MyLicenseNumber = get_last_nums("March", 1, 2049, 'florida', 'f', name_middle_initial('Opius','Henry', 'B',))
 print(MyLicenseNumber)
