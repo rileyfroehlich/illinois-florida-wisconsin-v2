@@ -23,7 +23,8 @@ def get_soundex(name):
 	soundex = soundex[:4].ljust(4, "0")
 
 	return str(soundex)
-def name_middle_initial(name, middle_initial):
+
+def name_middle_initial(name, middle_initial=None):
 	#get soundex of given name
 	sdx = get_soundex(name)
 
@@ -41,9 +42,29 @@ def name_middle_initial(name, middle_initial):
 
 	for i in range(len(alphabet2)):
 		dict2[alphabet2[i]] = i + 1
+	
+	middle_initial_encoding = 0
+	for key in dict2.keys():
+		if middle_initial in key:
+			middle_initial_encoding = dict2[key]
+			break
+	
+	if name[0].upper() in 'AB':
+		if name[0].upper() == 'A':
+			name0 = 0
+		elif name[0].upper() == 'B':
+			name0 = 60
+		name0 += middle_initial_encoding
+		name0 = str(name0)
+		if len(name0) < 3:
+			for i in range(3 - len(name0)):
+				name0 = "0" + name0
+		sdx += str(name0)
 
-	next_3_nums = int(dictionary[name[0]]) + dict2[middle_initial]
-	sdx += str(next_3_nums)
+	else:
+		next_3_nums = dictionary[name[0]] + str(middle_initial_encoding)
+		sdx += str(next_3_nums)
+
 	return sdx
 
 def get_last_nums(month, day, year, whichState, sex, sdx):
@@ -53,12 +74,14 @@ def get_last_nums(month, day, year, whichState, sex, sdx):
 	isFemaleTrue = 0
 	if sex.lower() == 'f':
 		isFemale = True
+	else:
+		isFemale = False
 
 	if whichState.lower() == 'illinois':
 		eachMonth = 31
 		if isFemale == True:
 			isFemaleTrue = 6
-	elif whichState.lower() == 'florida':
+	elif whichState.lower() == 'florida' or whichState.lower() == 'wisconsin'
 		eachMonth = 40
 		if isFemale == True:
 			isFemaleTrue = 5
@@ -93,5 +116,5 @@ def get_last_nums(month, day, year, whichState, sex, sdx):
 	sdx += str(year) + str(monthEncoding)
 	return sdx
 
-MyLicenseNumber = get_last_nums("March", 3, 1949, 'florida', 'f', name_middle_initial('Matthew', 'A'))
+MyLicenseNumber = get_last_nums("March", 1, 2049, 'florida', 'f', name_middle_initial('Aaron', 'B'))
 print(MyLicenseNumber)
